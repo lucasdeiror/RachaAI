@@ -28,3 +28,4 @@ backend/target/
 *.swo
 .DS_Store
 Thumbs.db
+.vercel
