@@ -1,0 +1,1 @@
+/home/usuario/dev/Obsidian/Cerebro/Projetos/RachaAI/Contexto.md
