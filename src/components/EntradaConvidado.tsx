@@ -4,12 +4,14 @@ import { Users } from 'lucide-react';
 interface EntradaConvidadoProps {
   nomeHost: string;
   onEntrar: (nome: string) => void;
+  onCriarNovaMesa?: () => void;
   isLoading?: boolean;
 }
 
 export const EntradaConvidado: React.FC<EntradaConvidadoProps> = ({
   nomeHost,
   onEntrar,
+  onCriarNovaMesa,
   isLoading,
 }) => {
   const [nome, setNome] = useState('');
@@ -70,6 +72,19 @@ export const EntradaConvidado: React.FC<EntradaConvidadoProps> = ({
           {isLoading ? 'Entrando...' : 'Entrar na Mesa'}
         </button>
       </form>
+
+      {onCriarNovaMesa && (
+        <div className="pt-2 border-t border-[#23232A] text-center">
+          <button
+            type="button"
+            onClick={onCriarNovaMesa}
+            className="text-xs text-[#A1A1AA] hover:text-[#FACC15] font-medium flex items-center justify-center gap-1.5 mx-auto transition-colors"
+          >
+            <span>👑 Quer abrir sua própria mesa?</span>
+            <span className="text-[#FACC15] font-bold underline">Criar Nova Sala</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="favGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="100%" stop-color="#FACC15" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#0A0A0C" />
+  <rect width="60" height="60" x="2" y="2" rx="14" fill="none" stroke="#FACC15" stroke-opacity="0.3" stroke-width="1.5" />
+  <!-- Division Slash -->
+  <line x1="47" y1="17" x2="17" y2="47" stroke="url(#favGold)" stroke-width="5" stroke-linecap="round" />
+  <!-- Upper Dot / Spark -->
+  <circle cx="43" cy="27" r="4.5" fill="#FACC15" />
+  <!-- Lower Dot / Spark -->
+  <circle cx="21" cy="37" r="4.5" fill="#FACC15" />
+  <!-- Pint Glass Accent -->
+  <path d="M 23 18 L 41 18 L 38 46 C 38 49, 36 51, 32 51 C 28 51, 26 49, 26 46 Z" fill="none" stroke="#FFFFFF" stroke-opacity="0.75" stroke-width="2.5" stroke-linejoin="round" />
+  <!-- Liquid fill -->
+  <path d="M 25 28 L 39 28 L 37.5 45 C 37.5 47, 35 48.5, 32 48.5 C 29 48.5, 26.5 47, 26.5 45 Z" fill="#FACC15" fill-opacity="0.35" />
+</svg>

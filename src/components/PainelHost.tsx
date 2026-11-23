@@ -17,6 +17,7 @@ interface PainelHostProps {
   onMarcarPagoDinheiro: (participanteId: number) => void;
   onAbrirCompartilhar: () => void;
   onAlternarParaConvidado: () => void;
+  onEncerrarMesa?: () => void;
 }
 
 export const PainelHost: React.FC<PainelHostProps> = ({
@@ -32,6 +33,7 @@ export const PainelHost: React.FC<PainelHostProps> = ({
   onMarcarPagoDinheiro,
   onAbrirCompartilhar,
   onAlternarParaConvidado,
+  onEncerrarMesa,
 }) => {
   // Cálculos financeiros do Anfitrião
   const totalItens = itens.reduce((acc, i) => acc + i.valorTotal, 0);
@@ -264,7 +266,7 @@ export const PainelHost: React.FC<PainelHostProps> = ({
       </div>
 
       {/* Botão de Teste / Alternar para Visão de Convidado */}
-      <div className="pt-2">
+      <div className="pt-2 space-y-2">
         <button
           type="button"
           onClick={onAlternarParaConvidado}
@@ -274,6 +276,16 @@ export const PainelHost: React.FC<PainelHostProps> = ({
           Entrar como Convidado (Simular Amigo na Mesa)
           <ArrowRight size={13} />
         </button>
+
+        {onEncerrarMesa && (
+          <button
+            type="button"
+            onClick={onEncerrarMesa}
+            className="w-full py-2 text-xs text-[#71717A] hover:text-[#F87171] transition-colors text-center"
+          >
+            Encerrar esta mesa e abrir nova sala
+          </button>
+        )}
       </div>
     </div>
   );

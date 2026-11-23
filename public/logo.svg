@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <defs>
+    <linearGradient id="logoGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="50%" stop-color="#FACC15" />
+      <stop offset="100%" stop-color="#EAB308" />
+    </linearGradient>
+  </defs>
+
+  <!-- Logo Mark Emblem (Left) -->
+  <g transform="translate(10, 10)">
+    <rect width="60" height="60" rx="16" fill="#141419" stroke="#27272A" stroke-width="1.5" />
+    <rect width="60" height="60" rx="16" fill="none" stroke="#FACC15" stroke-opacity="0.25" stroke-width="1" />
+    <!-- Clinking glasses / division slash -->
+    <path d="M 21 16 L 39 16 L 36.5 44 C 36.5 47, 34.5 49, 30 49 C 25.5 49, 23.5 47, 23.5 44 Z" fill="#202026" stroke="#FFFFFF" stroke-opacity="0.7" stroke-width="2.5" stroke-linejoin="round" />
+    <path d="M 23 26 L 37 26 L 35.5 43 C 35.5 45, 33 47, 30 47 C 27 47, 24.5 45, 24.5 43 Z" fill="url(#logoGold)" fill-opacity="0.85" />
+    <!-- Division Beam -->
+    <line x1="46" y1="14" x2="14" y2="46" stroke="url(#logoGold)" stroke-width="4.5" stroke-linecap="round" />
+    <circle cx="41" cy="24" r="3.5" fill="#FACC15" />
+    <circle cx="19" cy="36" r="3.5" fill="#FACC15" />
+  </g>
+
+  <!-- Typography (Right) -->
+  <g transform="translate(84, 24)">
+    <text x="0" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="900" font-size="28" fill="#FFFFFF" letter-spacing="1">RACHA<tspan fill="#FACC15">AI</tspan></text>
+    <text x="1" y="40" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="700" font-size="8.5" fill="#A1A1AA" letter-spacing="2.5">RATEIO INTELIGENTE DE CONTAS</text>
+  </g>
+</svg>

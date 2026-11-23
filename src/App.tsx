@@ -6,7 +6,10 @@ import { ParticipanteRadar } from './components/RadarQuitacao';
 import { CompartilharMesa } from './components/CompartilharMesa';
 import { PainelHost } from './components/PainelHost';
 import { PainelConvidado } from './components/PainelConvidado';
-import { Share2, Users, Crown } from 'lucide-react';
+import { Logo } from './components/Logo';
+import { InstalarApp } from './components/InstalarApp';
+import { useNovaVersao } from './hooks/usePwa';
+import { Share2, RefreshCw } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [mesa, setMesa] = useState<any>(null);
@@ -15,7 +18,11 @@ export const App: React.FC = () => {
   const [mostrarModalCompartilhar, setMostrarModalCompartilhar] = useState(false);
   const [visaoAtual, setVisaoAtual] = useState<'HOST' | 'CONVIDADO'>('HOST');
 
-  // Verifica se há parâmetro na URL para entrar direto como Convidado
+  const { novaVersao, atualizar } = useNovaVersao();
+
+  // Separação estrita de rotas na entrada:
+  // 1. Sem parâmetro -> Cai como HOST (Criar Mesa)
+  // 2. Com parâmetro (?mesa=...) -> Cai como CONVIDADO
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -26,7 +33,7 @@ export const App: React.FC = () => {
       const taxaParam = params.get('taxa');
       const itensParam = params.get('itens');
 
-      if (mesaParam && !mesa) {
+      if (mesaParam) {
         const mesaCarregada = {
           id: 1,
           codigoHash: mesaParam,
@@ -49,10 +56,14 @@ export const App: React.FC = () => {
         setVisaoAtual('CONVIDADO');
       } else if (papelParam === 'convidado') {
         setVisaoAtual('CONVIDADO');
+      } else {
+        // Entrada própria: Cai como Host
+        setVisaoAtual('HOST');
       }
     }
   }, []);
 
+  // Criar mesa como Host
   const handleCriarMesa = (data: CriarMesaData) => {
     const hash = 'ROL-' + Math.floor(1000 + Math.random() * 9000);
     const novaMesa = {
@@ -65,7 +76,7 @@ export const App: React.FC = () => {
     };
     setMesa(novaMesa);
 
-    // Host registrado
+    // Host registrado como credor
     const hostPart: ParticipanteRadar = {
       id: 1,
       nome: data.nomeHost,
@@ -76,7 +87,18 @@ export const App: React.FC = () => {
     setVisaoAtual('HOST');
   };
 
-  // Lançamento Colaborativo de Itens (tanto Host quanto Convidado podem lançar)
+  // Convidado ou Host decide criar uma sala própria
+  const handleCriarNovaMesa = () => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', window.location.pathname);
+    }
+    setMesa(null);
+    setItens([]);
+    setParticipantes([]);
+    setVisaoAtual('HOST');
+  };
+
+  // Lançamento Colaborativo de Itens
   const handleAddItem = (itemInput: ItemComandaInput) => {
     setItens((prev) => {
       const precoUnit = itemInput.valorTotal / itemInput.quantidade;
@@ -113,7 +135,7 @@ export const App: React.FC = () => {
     setItens((prev) => prev.filter((i) => i.id !== itemId));
   };
 
-  // Convidado declara que fez o Pix
+  // Convidado declara pagamento
   const handleDeclararPago = (nomeConvidado: string, valor: number) => {
     setParticipantes((prev) => {
       const index = prev.findIndex((p) => p.nome.toLowerCase() === nomeConvidado.toLowerCase());
@@ -138,14 +160,14 @@ export const App: React.FC = () => {
     });
   };
 
-  // Host confirma recebimento do Pix com 1 toque
+  // Host confirma recebimento do Pix em 1 toque
   const handleConfirmarPagamento = (participanteId: number) => {
     setParticipantes((prev) =>
       prev.map((p) => (p.id === participanteId ? { ...p, statusQuitacao: 'CONFIRMADO' } : p))
     );
   };
 
-  // Host marca pagamento em dinheiro
+  // Host marca em dinheiro
   const handleMarcarPagoDinheiro = (participanteId: number) => {
     setParticipantes((prev) =>
       prev.map((p) => (p.id === participanteId ? { ...p, statusQuitacao: 'CONFIRMADO' } : p))
@@ -155,58 +177,40 @@ export const App: React.FC = () => {
   return (
     <main className="min-h-screen bg-[#0A0A0C] text-white flex flex-col items-center justify-start p-3 sm:p-5 font-sans">
       <div className="w-full max-w-[420px] space-y-4">
-        {/* Header RachaAI Noturno */}
-        <header className="flex justify-between items-center px-1">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FACC15] animate-pulse"></span>
-            <span className="font-mono font-bold tracking-wider text-base text-white">
-              RACHA<span className="text-[#FACC15]">AI</span>
-            </span>
+        {/* Banner de Atualização PWA */}
+        {novaVersao && (
+          <div className="bg-[#FACC15] text-[#0A0A0C] p-3 rounded-2xl flex items-center justify-between shadow-lg text-xs font-bold animate-in fade-in">
+            <span>Nova versão disponível!</span>
+            <button
+              type="button"
+              onClick={atualizar}
+              className="px-3 py-1 bg-[#0A0A0C] text-[#FACC15] rounded-xl flex items-center gap-1.5"
+            >
+              <RefreshCw size={12} /> Atualizar
+            </button>
           </div>
+        )}
 
-          {mesa && (
-            <div className="flex items-center gap-2">
+        {/* Header RachaAI com Logo e Ações */}
+        <header className="flex justify-between items-center px-1">
+          <Logo size="md" />
+
+          <div className="flex items-center gap-2">
+            <InstalarApp />
+
+            {mesa && (
               <button
                 type="button"
                 onClick={() => setMostrarModalCompartilhar(true)}
                 className="px-2.5 py-1 bg-[#151518] hover:bg-[#202026] text-[#FACC15] border border-[#FACC15]/30 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow"
+                title="Compartilhar mesa"
               >
                 <Share2 size={13} />
                 <span>{mesa.codigoHash}</span>
               </button>
-            </div>
-          )}
-        </header>
-
-        {/* Barra de Alternância de Visões (Para testes instantâneos em Localhost) */}
-        {mesa && (
-          <div className="bg-[#151518] border border-[#23232A] rounded-2xl p-1 flex items-center justify-between shadow">
-            <button
-              type="button"
-              onClick={() => setVisaoAtual('HOST')}
-              className={`flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                visaoAtual === 'HOST'
-                  ? 'bg-[#FACC15] text-[#0A0A0C] shadow'
-                  : 'text-[#A1A1AA] hover:text-white'
-              }`}
-            >
-              <Crown size={14} />
-              👑 Anfitrião ({mesa.nomeHost})
-            </button>
-            <button
-              type="button"
-              onClick={() => setVisaoAtual('CONVIDADO')}
-              className={`flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                visaoAtual === 'CONVIDADO'
-                  ? 'bg-[#FACC15] text-[#0A0A0C] shadow'
-                  : 'text-[#A1A1AA] hover:text-white'
-              }`}
-            >
-              <Users size={14} />
-              👥 Convidado
-            </button>
+            )}
           </div>
-        )}
+        </header>
 
         {/* Modal de Compartilhamento / QR Code */}
         {mostrarModalCompartilhar && mesa && (
@@ -220,10 +224,10 @@ export const App: React.FC = () => {
           />
         )}
 
-        {/* 1. Criar Mesa (Apenas se a mesa ainda não foi criada) */}
+        {/* 1. Visão Host: Criar Mesa (Entrada própria sem mesa ativa) */}
         {!mesa && <CriarMesaForm onSubmit={handleCriarMesa} />}
 
-        {/* 2. Cockpit do Anfitrião (Visão de Recebimento, Métricas, Radar e Itens) */}
+        {/* 2. Cockpit do Anfitrião (Host com mesa aberta) */}
         {mesa && visaoAtual === 'HOST' && (
           <PainelHost
             codigoHash={mesa.codigoHash}
@@ -238,10 +242,11 @@ export const App: React.FC = () => {
             onMarcarPagoDinheiro={handleMarcarPagoDinheiro}
             onAbrirCompartilhar={() => setMostrarModalCompartilhar(true)}
             onAlternarParaConvidado={() => setVisaoAtual('CONVIDADO')}
+            onEncerrarMesa={handleCriarNovaMesa}
           />
         )}
 
-        {/* 3. Telas do Convidado (Entrada -> Comanda Colaborativa -> Pagamento Pix com Copiar Chave -> Status) */}
+        {/* 3. Visão do Convidado (Entrou por link compartilhado) */}
         {mesa && visaoAtual === 'CONVIDADO' && (
           <PainelConvidado
             codigoHash={mesa.codigoHash}
@@ -252,6 +257,7 @@ export const App: React.FC = () => {
             onAddItem={handleAddItem}
             onDeclararPago={handleDeclararPago}
             onVoltarParaHost={() => setVisaoAtual('HOST')}
+            onCriarNovaMesa={handleCriarNovaMesa}
           />
         )}
       </div>

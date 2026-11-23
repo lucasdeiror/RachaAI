@@ -15,6 +15,7 @@ interface PainelConvidadoProps {
   onAddItem: (item: ItemComandaInput) => void;
   onDeclararPago: (nomeConvidado: string, valor: number) => void;
   onVoltarParaHost?: () => void;
+  onCriarNovaMesa?: () => void;
 }
 
 export const PainelConvidado: React.FC<PainelConvidadoProps> = ({
@@ -26,6 +27,7 @@ export const PainelConvidado: React.FC<PainelConvidadoProps> = ({
   onAddItem,
   onDeclararPago,
   onVoltarParaHost,
+  onCriarNovaMesa,
 }) => {
   const [nomeConvidado, setNomeConvidado] = useState<string>('');
   const [etapa, setEtapa] = useState<'ENTRADA' | 'COMANDA' | 'PAGAMENTO' | 'STATUS'>('ENTRADA');
@@ -66,7 +68,7 @@ export const PainelConvidado: React.FC<PainelConvidadoProps> = ({
   if (etapa === 'ENTRADA') {
     return (
       <div className="space-y-3">
-        <EntradaConvidado nomeHost={nomeHost} onEntrar={handleEntrar} />
+        <EntradaConvidado nomeHost={nomeHost} onEntrar={handleEntrar} onCriarNovaMesa={onCriarNovaMesa} />
         {onVoltarParaHost && (
           <button
             type="button"
@@ -365,6 +367,17 @@ export const PainelConvidado: React.FC<PainelConvidadoProps> = ({
         >
           <Receipt size={14} /> Pediu mais alguma coisa? Voltar à Comanda
         </button>
+
+        {onCriarNovaMesa && (
+          <button
+            type="button"
+            onClick={onCriarNovaMesa}
+            className="w-full py-2.5 text-xs text-[#A1A1AA] hover:text-[#FACC15] font-medium flex items-center justify-center gap-1.5 transition-colors border border-dashed border-[#2C2C35] rounded-2xl"
+          >
+            <span>👑 Quer abrir outra mesa?</span>
+            <span className="text-[#FACC15] font-bold">Criar Nova Sala</span>
+          </button>
+        )}
 
         {onVoltarParaHost && (
           <button
